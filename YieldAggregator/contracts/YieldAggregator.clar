@@ -304,4 +304,32 @@
   )
 )
 
+;; NEW FEATURE: Advanced Portfolio Analytics and Multi-Pool Operations
+(define-public (get-user-portfolio-summary (user principal))
+  (let (
+    (pool-1-data (get-user-pool-data user u1))
+    (pool-2-data (get-user-pool-data user u2))
+    (pool-3-data (get-user-pool-data user u3))
+    (pool-4-data (get-user-pool-data user u4))
+    (pool-5-data (get-user-pool-data user u5))
+    (total-staked (+ (+ (+ (+ (get staked pool-1-data) (get staked pool-2-data)) 
+                           (get staked pool-3-data)) (get staked pool-4-data)) 
+                     (get staked pool-5-data)))
+    (total-rewards (+ (+ (+ (+ (get rewards pool-1-data) (get rewards pool-2-data)) 
+                            (get rewards pool-3-data)) (get rewards pool-4-data)) 
+                      (get rewards pool-5-data)))
+    (active-positions (+ (+ (+ (+ (get active pool-1-data) (get active pool-2-data)) 
+                              (get active pool-3-data)) (get active pool-4-data)) 
+                        (get active pool-5-data)))
+  )
+    (ok {
+      user: user,
+      total-staked-value: total-staked,
+      total-pending-rewards: total-rewards,
+      active-positions: active-positions,
+      average-reward-rate: (if (> total-staked u0) (/ (* total-rewards PRECISION) total-staked) u0),
+      portfolio-health: (if (> active-positions u2) "diversified" "concentrated")
+    })
+  )
+)
 
